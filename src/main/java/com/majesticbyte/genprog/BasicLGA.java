@@ -17,11 +17,21 @@ import java.util.Random;
 public class BasicLGA implements Genotype {
 
     private ArrayList<OpNode> genome;
+    private ArrayList<OpNode> possibleOperations;
     private int size;
     private double feebleness;
     private Random rng;
+    private BasicLGAPhenotype myPhenotype;
+    
+    BasicLGA(Random rng) {
+        this.possibleOperations = null;
+        this.size = 0;
+        this.rng = rng;
+        genome = new ArrayList();
+    }
 
     BasicLGA(ArrayList<OpNode> operations, int size, Random rng) {
+        this.possibleOperations = operations;
         this.size = size;
         this.rng = rng;
         genome = new ArrayList();
@@ -43,14 +53,23 @@ public class BasicLGA implements Genotype {
                 mom2 = (BasicLGA) a;
             }
             int newSize = mom1.size;
-            int sizeEnd = mom1.size;
-            if (sizeEnd>=newSize) sizeEnd = 0;
-            for (int i = 0; i < sizeEnd; i++) {
-                genome.add(operations.get(rng.nextInt(operationsSize)));
+            int maxSplize = Math.min(newSize, mom2.size);
+            int spliceSize = rng.nextInt(maxSplize);
+            int spliceStart = rng.nextInt(newSize - spliceSize);
+            int spliceEnd = spliceSize + spliceStart;
+            ArrayList<OpNode> newGenome = new ArrayList<>(newSize);
+            for (int i = 0; i < spliceStart; i++) {
+                newGenome.add(mom1.genome.get(i));
             }
-            for (int i = 0; i < sizeEnd; i++) {
-                genome.add(operations.get(rng.nextInt(operationsSize)));
+            for (int i = spliceStart; i < spliceEnd; i++) {
+                newGenome.add(mom2.genome.get(i));
             }
+            for (int i = spliceEnd; i < newSize; i++) {
+                newGenome.add(mom1.genome.get(i));
+            }
+            this.genome = newGenome;
+            this.myPhenotype = null;
+            
         } else // not compatible genotypes
         {
             throw new IllegalArgumentException("BasicLGA combine operation: incompatible Genotype");
@@ -59,17 +78,17 @@ public class BasicLGA implements Genotype {
 
     @Override
     public Phenotype getPhenotype() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public Genotype clone() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        if (this.myPhenotype == null)
+        {
+            myPhenotype = new BasicLGAPhenotype(genome);
+        }
+        return myPhenotype;
     }
 
     @Override
     public Genotype cloneRandomized() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        BasicLGA newGenotype = new BasicLGA(possibleOperations, this.size, rng);
+        return newGenotype;
     }
 
     @Override

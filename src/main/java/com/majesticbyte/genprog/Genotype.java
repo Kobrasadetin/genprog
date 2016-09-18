@@ -12,7 +12,6 @@ package com.majesticbyte.genprog;
 public interface Genotype {   
     public void combine(Genotype a, Genotype b);
     public Phenotype getPhenotype();
-    public Genotype clone();
     public Genotype cloneRandomized();
     public Double getFeebleness();
     public void setFeebleness(Double value);

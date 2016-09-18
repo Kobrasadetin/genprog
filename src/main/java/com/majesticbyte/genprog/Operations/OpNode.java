@@ -10,5 +10,5 @@ package com.majesticbyte.genprog.Operations;
  * @author mkarjanm
  */
 public interface OpNode {
-    
+    public boolean Call(Stack stack, Registry registers);
 }

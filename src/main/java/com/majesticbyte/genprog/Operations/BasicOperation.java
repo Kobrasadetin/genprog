@@ -12,80 +12,71 @@ import java.util.Objects;
  * @author mkarjanm
  */
 public class BasicOperation implements OpNode {
-    
+
     /*
     *   Inner classes
-    */
-
+     */
     /**
      *
      */
     public enum Opcode {
 
         /**
-         *  No operation
+         * No operation
          */
         noop(0),
-
         /**
-         *  Multiply
+         * Multiply
          */
         mul(1),
-
         /**
-         *  Add
+         * Add
          */
         add(2),
-
         /**
-         *  Substract
+         * Substract
          */
         sub(3),
-
         /**
-         *  Divide
+         * Divide
          */
         div(4),
-
         /**
-         *  Push r1 to stack. R2 is not used.
+         * Push r1 to stack. R2 is not used.
          */
         push(5),
-
         /**
-         *  Pop from stack and set r1 to value. R2 is not used.
+         * Pop from stack and set r1 to value. R2 is not used.
          */
         pop(6),
-
         /**
-         *  Compare 
+         * Compare
          */
         comp(7),
-
         /**
-         *  Jump to position set in r2 if r1 is zero
+         * Jump to position set in r2 if r1 is zero
          */
         jzer(8),
-
         /**
-         *  Jump to position set in r2 if r1 is negative
+         * Jump to position set in r2 if r1 is negative
          */
         jneg(9),
-
         /**
          * Jump to position set in r2 if r1 is positive
          */
         jpos(10),
-
         /**
          * Jump to position set in r2
          */
         jump(11),
-
         /**
          * Set register r1 to value in r2 (TODO details on implementation)
          */
-        set(12),;
+        set(12),
+        /**
+         * Copy value from r2 to r1
+         */
+        mov(13);
 
         private final int operation;
 
@@ -103,26 +94,22 @@ public class BasicOperation implements OpNode {
          * none
          */
         none,
-
         /**
          * positive value
          */
         pos,
-
         /**
-         * negative  value
+         * negative value
          */
         neg,
-
         /**
-         *  value zero
+         * value zero
          */
         zero;
     }
 
     // koska Javassa ei ole delegaatteja, tämä rakenne vaikutti järkevimmältä
     //
-    
     private static interface ArgumentOperation {
 
         public boolean call(Stack stack, Registry registers, int r1, int r2);
@@ -211,6 +198,15 @@ public class BasicOperation implements OpNode {
         }
     }
 
+    private static class Move implements ArgumentOperation {
+
+        @Override
+        public boolean call(Stack stack, Registry reg, int r1, int r2) {
+            reg.set(r1, reg.get(r2));
+            return true;
+        }
+    }
+
     private static class Jump implements ArgumentOperation {
         //jump to arg2 if arg1 satisfies condition
 
@@ -241,13 +237,14 @@ public class BasicOperation implements OpNode {
             return true;
         }
     }
+
     private static class Set implements ArgumentOperation {
 
         @Override
         public boolean call(Stack stack, Registry reg, int r1, int r2) {
             // TODO implementation might change?
             // atm we use fixed point with 13 bits for decimals
-            double value = (double)reg.get(r2) / 8192.0;
+            double value = (double)r2 / 8192.0;
             reg.set(r1, value);
             return true;
         }
@@ -256,8 +253,7 @@ public class BasicOperation implements OpNode {
     /*
     *   BasicOperation class
     *
-    */
-    
+     */
     private final Opcode operation;
     private final int register1;
     private final int register2;
@@ -292,20 +288,37 @@ public class BasicOperation implements OpNode {
             case jzer:
                 argOp = new Jump(JumpCondition.zero);
                 break;
+            case push:
+                argOp = new Push();
+                break;
+            case pop:
+                argOp = new Pop();
+                break;
             case comp:
                 argOp = new Compare();
                 break;
+            case mov:
+                argOp = new Move();
+                break;
+            case set:
+                argOp = new Set();
+                break;
+            case noop:
             default:
                 argOp = new Noop();
+                break;
         }
     }
 
     /**
-     * Operations on linear genetic programs use a stack and registers to hold state.
-     * The registry has a program counter.
-     * @param stack         is the Stack (@see com.majesticbyte.genprog.Operations#Stack)
-     * @param registers     is the Registry (@see com.majesticbyte.genprog.Operations#Registry)
-     * @return              returns true if the operation succeeded
+     * Operations on linear genetic programs use a stack and registers to hold
+     * state. The registry has a program counter.
+     *
+     * @param stack is the Stack (@see
+     * com.majesticbyte.genprog.Operations#Stack)
+     * @param registers is the Registry (@see
+     * com.majesticbyte.genprog.Operations#Registry)
+     * @return returns true if the operation succeeded
      */
     @Override
     public boolean call(Stack stack, Registry registers) {
@@ -349,5 +362,5 @@ public class BasicOperation implements OpNode {
     public String toString() {
         return "BasicOp{" + "op=" + operation.name() + ", r1=" + register1 + ", r2=" + register2 + '}';
     }
-    
+
 }

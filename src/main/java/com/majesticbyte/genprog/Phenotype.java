@@ -16,5 +16,5 @@ public interface Phenotype {
      * @param input     input DataPoint
      * @return          resulting DataPoint
      */
-    public DataPoint calculate(DataPoint input);
+    public ProgramResult calculate(DataPoint input);
 }

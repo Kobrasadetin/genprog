@@ -16,7 +16,7 @@ import java.util.Random;
  */
 public class BasicLGA implements Genotype {
 
-    private ArrayList<OpNode> genome;
+    private ArrayList<BasicLGAGene> genome;
     private ArrayList<? extends OpNode> possibleOperations;
     private int size;
     private double feebleness;
@@ -37,7 +37,7 @@ public class BasicLGA implements Genotype {
         genome = new ArrayList();
         int operationsSize = operations.size();
         for (int i = 0; i < size; i++) {
-            genome.add(operations.get(rng.nextInt(operationsSize)));
+            genome.add(new BasicLGAGene(operations.get(rng.nextInt(operationsSize)), rng.nextInt(size),  rng.nextInt(256)));
         }
     }
 
@@ -64,7 +64,7 @@ public class BasicLGA implements Genotype {
             int spliceSize = rng.nextInt(maxSplize);
             int spliceStart = rng.nextInt(maxSplize - spliceSize);
             int spliceEnd = spliceSize + spliceStart;
-            ArrayList<OpNode> newGenome = new ArrayList<>(newSize);
+            ArrayList<BasicLGAGene> newGenome = new ArrayList<>(newSize);
             for (int i = 0; i < spliceStart; i++) {
                 newGenome.add(mom1.genome.get(i));
             }
@@ -92,7 +92,7 @@ public class BasicLGA implements Genotype {
     @Override
     public Phenotype getPhenotype() {
         if (this.myPhenotype == null) {
-            myPhenotype = new BasicLGAPhenotype(genome);
+            myPhenotype = new BasicLGAPhenotype(genome, size);
         }
         return myPhenotype;
     }

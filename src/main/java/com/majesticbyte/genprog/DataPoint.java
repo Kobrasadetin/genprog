@@ -15,13 +15,18 @@ public class DataPoint{
     private ArrayList<Double> input;
     private ArrayList<Double> output;
 
+    public DataPoint(ArrayList<Double> input, ArrayList<Double> output) {
+        this.input = input;
+        this.output = output;
+    }
+
     //returns sum of squred errors
-    double getError(DataPoint calculate) {
+    double getError(ArrayList<Double> compare) {       
         double sum = 0.0;
         int i = 0;
-        for (Double inputValue : input)
+        for (Double outputValue : output)
         {
-            double error = inputValue-output.get(i);
+            double error = outputValue-compare.get(i);
             error = Math.pow(error, 2);
             sum += error;
             i++;
@@ -29,5 +34,20 @@ public class DataPoint{
         return sum;
         
     }
+    
+    //returned when program doesn't halt
+    double maxError()
+    {
+        return (double)output.size();
+    }
+
+    public ArrayList<Double> getInput() {
+        return input;
+    }
+
+    public ArrayList<Double> getOutput() {
+        return output;
+    }
+    
     
 }

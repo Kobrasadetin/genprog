@@ -34,11 +34,11 @@ public class Population {
      * Uses an Evaluator to go trough the population and evaluate each Genotype's Phenotype
      * @param evaluator     Evaluator used to go trough the population and evaluate each Genotype's Phenotype
      */
-    public void evaluate(Evaluator evaluator)
+    public void evaluate(Evaluator evaluator, Batch batch)
     {
         for(Genotype genotype : genotypes)
         {
-            evaluator.evaluate(genotype);
+            evaluator.evaluate(genotype, batch);
         }
     }
 

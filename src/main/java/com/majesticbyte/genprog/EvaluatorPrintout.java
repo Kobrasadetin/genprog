@@ -9,12 +9,9 @@ package com.majesticbyte.genprog;
  *
  * @author mkarjanm
  */
-class Evaluator {
-    private Batch currentBatch;
-    public Evaluator()
-    {
-        
-    }
+public class EvaluatorPrintout extends Evaluator {
+
+    @Override
     public void evaluate(Genotype genotype, Batch batch) {
         for (DataPoint data : batch) {
             double error;
@@ -25,14 +22,7 @@ class Evaluator {
                 error = data.getError(output.getOutput());
             }
             genotype.setFeebleness(genotype.getFeebleness() + error);
+            System.out.println("evaluation result: "+output.toString());
         }
     }
-    public void evaluate(Genotype genotype) {
-        if (currentBatch == null)
-        {
-            throw new IllegalArgumentException("no batch");
-        }
-        evaluate(genotype, currentBatch);
-    }
-    
 }

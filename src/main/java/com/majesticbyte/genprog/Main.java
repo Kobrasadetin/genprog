@@ -41,9 +41,6 @@ class OpNodeMockup implements OpNode {
     }
 }
 
-class DPMockup extends DataPoint {
-
-}
 
 /**
  *

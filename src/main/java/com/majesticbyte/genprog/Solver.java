@@ -33,6 +33,8 @@ public class Solver{
                 .addOperation(Opcode.set).r1Range(1, 3).r2Range(0, 16384).r2StepSize(512);      
         
         initialize(12, new BasicLGA(builder.toArray(), 32, new Random()));
+        
+        System.out.println(population.toString());
     }
     
     /**

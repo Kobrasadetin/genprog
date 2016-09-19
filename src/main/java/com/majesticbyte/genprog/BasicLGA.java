@@ -126,9 +126,18 @@ public class BasicLGA implements Genotype {
      * @param value error
      */
     @Override
-    public void setFeebleness(Double value
-    ) {
+    public void setFeebleness(Double value) {
         this.feebleness = value;
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder s = new StringBuilder();
+        String nl = System.getProperty("line.separator");
+        s.append(nl).append("BasicLGA:").append(nl)
+                    .append("genotype:  ").append(genome.toString()).append(nl)
+                    .append("phenotype: ").append(this.getPhenotype().toString());
+        return s.toString();
     }
 
 }

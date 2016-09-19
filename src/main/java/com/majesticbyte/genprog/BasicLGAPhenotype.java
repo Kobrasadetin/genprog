@@ -35,5 +35,10 @@ class BasicLGAPhenotype implements Phenotype{
         }      
         return input;
     }
+
+    @Override
+    public String toString() {
+        return "BLGAPhenotype{" + genome + '}';
+    }
     
 }

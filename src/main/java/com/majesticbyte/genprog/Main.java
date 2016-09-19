@@ -53,35 +53,12 @@ public class Main {
 
     /**
      * No reason for having a main method at the moment.
-     * For some reason my NetBeans refuses to do debug test runs, so this is used for test debug
+     * For some reason my NetBeans refuses to do debug test runs (due to Maven?), so this is used for test debug
      * @param args
      */
     public static void main(String[] args) {
-        Random testRng = new Random();
-        BasicLGA test1;
-        BasicLGA test2;
-        OpNode operation1;
-        OpNode operation2;
-        OpNode operation3;
-        ArrayList<OpNode> mockupOperations = new ArrayList<>();
-        OpCallCounter opCallCounter = new OpCallCounter();
-        DataPoint data = new DPMockup();
-
-        operation1 = new OpNodeMockup(1, opCallCounter);
-        operation2 = new OpNodeMockup(2, opCallCounter);
-        operation3 = new OpNodeMockup(3, opCallCounter);
-        mockupOperations.add(operation1);
-        mockupOperations.add(operation2);
-        mockupOperations.add(operation3);
-        test1 = new BasicLGA(mockupOperations, 12, testRng);
-        test2 = new BasicLGA(mockupOperations, 16, testRng);
-
-        System.out.println("combine");
-        Genotype a = test1;
-        Genotype b = test2;
-        BasicLGA instance = new BasicLGA(testRng);
-        instance.combine(a, b);
-        instance.getPhenotype().calculate(data);
+        Solver solver = new Solver();
+        
 
     }
 

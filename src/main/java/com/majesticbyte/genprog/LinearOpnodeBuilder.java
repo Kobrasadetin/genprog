@@ -23,7 +23,7 @@ public class LinearOpnodeBuilder {
     private boolean currentListFinal = false;
 
     public LinearOpnodeBuilder addOperation(Opcode operation) {
-        if (currentListFinal) reinitialize();
+        if (currentListFinal) addOpnodes();
         currentOperation.add(operation);
         return this;
     }
@@ -54,7 +54,7 @@ public class LinearOpnodeBuilder {
                     operations.add(new BasicOperation(operation, r1, r2));
                 }
             }
-        }
+        }      
         reinitialize();
     }
 

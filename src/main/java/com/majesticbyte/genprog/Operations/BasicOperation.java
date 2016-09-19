@@ -344,5 +344,10 @@ public class BasicOperation implements OpNode {
         }
         return true;
     }
+
+    @Override
+    public String toString() {
+        return "BasicOp{" + "op=" + operation.name() + ", r1=" + register1 + ", r2=" + register2 + '}';
+    }
     
 }

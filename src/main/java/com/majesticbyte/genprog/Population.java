@@ -41,4 +41,11 @@ public class Population {
             evaluator.evaluate(genotype);
         }
     }
+
+    @Override
+    public String toString() {
+        return "Population{" + genotypes + '}';
+    }
+    
+   
 }

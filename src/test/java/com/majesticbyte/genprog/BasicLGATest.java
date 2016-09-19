@@ -33,9 +33,20 @@ public class BasicLGATest {
     class OpCallCounter {
 
         public int callCount = 0;
+        public int[] callArray = new int[256];
 
-        public void Call() {
+        public void Call(int callType) {
             callCount++;
+            callArray[callType]++;
+        }
+
+        public void clear() {
+            callCount = 0;
+            callArray = new int[256];
+            for(int i = 0; i<256; i++)
+            {
+                callArray[i] = 0;
+            }
         }
     }
 
@@ -50,15 +61,15 @@ public class BasicLGATest {
         }
 
         @Override
-        public boolean Call(Stack stack, Registry registers) {
-            counter.callCount++;
+        public boolean call(Stack stack, Registry registers) {
+            counter.Call(value);
             return true;
         }
+
     }
-    
+
     class DPMockup extends DataPoint {
-        
-      
+
     }
 
     public BasicLGATest() {
@@ -83,6 +94,7 @@ public class BasicLGATest {
         Genotype b = test2;
         BasicLGA instance = new BasicLGA(testRng);
         instance.combine(a, b);
+        opCallCounter.clear();
         assertTrue(opCallCounter.callCount == 0);
         instance.getPhenotype().calculate(data);
         assertTrue(opCallCounter.callCount >= 12);
@@ -91,40 +103,19 @@ public class BasicLGATest {
     @Test
     public void testGetPhenotype() {
         System.out.println("getPhenotype");
-        BasicLGA instance = null;
-        Phenotype expResult = null;
+        BasicLGA instance = test1;
         Phenotype result = instance.getPhenotype();
-        assertEquals(expResult, result);
-        fail("The test case is a prototype.");
+        assertEquals(BasicLGAPhenotype.class, result.getClass());
     }
 
     @Test
     public void testCloneRandomized() {
         System.out.println("cloneRandomized");
-        BasicLGA instance = null;
-        Genotype expResult = null;
+        BasicLGA instance = test1;
+        opCallCounter.clear();
         Genotype result = instance.cloneRandomized();
-        assertEquals(expResult, result);
-        fail("The test case is a prototype.");
-    }
-
-    @Test
-    public void testGetFeebleness() {
-        System.out.println("getFeebleness");
-        BasicLGA instance = null;
-        Double expResult = null;
-        Double result = instance.getFeebleness();
-        assertEquals(expResult, result);
-        fail("The test case is a prototype.");
-    }
-
-    @Test
-    public void testSetFeebleness() {
-        System.out.println("setFeebleness");
-        Double value = null;
-        BasicLGA instance = null;
-        instance.setFeebleness(value);
-        fail("The test case is a prototype.");
+        result.getPhenotype().calculate(data);
+        assertTrue(opCallCounter.callCount >= 12);
     }
 
 }

@@ -8,11 +8,19 @@ package com.majesticbyte.genprog;
 import java.util.ArrayList;
 
 /**
- *
+ * Population is a collection of genotypes,
+ * held in it's own class for convenience.
  * @author mkarjanm
  */
 public class Population {
     private ArrayList<Genotype >genotypes;
+
+    /**
+     * The constructor uses the cloneRandomized method of the given Genotype prototype to create a population of genotypes.
+     * 
+     * @param populationSize    genotype count
+     * @param prototype         The constructor uses the cloneRandomized method of the given Genotype prototype to create a population of genotypes.
+     */
     public Population(int populationSize, Genotype prototype)
     {
         genotypes = new ArrayList();
@@ -21,6 +29,11 @@ public class Population {
             genotypes.add(prototype.cloneRandomized());
         }
     }
+
+    /**
+     * Uses an Evaluator to go trough the population and evaluate each Genotype's Phenotype
+     * @param evaluator     Evaluator used to go trough the population and evaluate each Genotype's Phenotype
+     */
     public void evaluate(Evaluator evaluator)
     {
         for(Genotype genotype : genotypes)

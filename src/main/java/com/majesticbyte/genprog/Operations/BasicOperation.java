@@ -11,19 +11,74 @@ package com.majesticbyte.genprog.Operations;
  */
 public class BasicOperation implements OpNode {
 
+    /**
+     *
+     */
     public enum Opcode {
+
+        /**
+         *  No operation
+         */
         noop(0),
+
+        /**
+         *  Multiply
+         */
         mul(1),
+
+        /**
+         *  Add
+         */
         add(2),
+
+        /**
+         *  Substract
+         */
         sub(3),
+
+        /**
+         *  Divide
+         */
         div(4),
+
+        /**
+         *  Push to stack
+         */
         push(5),
+
+        /**
+         *  Pop from stack
+         */
         pop(6),
+
+        /**
+         *  Compare 
+         */
         comp(7),
+
+        /**
+         *  Jump to position set in r2 if r1 is zero
+         */
         jzer(8),
+
+        /**
+         *  Jump to position set in r2 if r1 is negative
+         */
         jneg(9),
+
+        /**
+         * Jump to position set in r2 if r1 is positive
+         */
         jpos(10),
+
+        /**
+         * Jump to position set in r2
+         */
         jump(11),
+
+        /**
+         * Set register r1 to value in r2 (TODO details on implementation)
+         */
         set(12),;
 
         private final int operation;
@@ -33,11 +88,35 @@ public class BasicOperation implements OpNode {
         }
     }
 
+    /**
+     * Jump conditions
+     */
     public enum JumpCondition {
-        none, pos, neg, zero;
+
+        /**
+         * none
+         */
+        none,
+
+        /**
+         * positive value
+         */
+        pos,
+
+        /**
+         * negative  value
+         */
+        neg,
+
+        /**
+         *  value zero
+         */
+        zero;
     }
 
     // koska Javassa ei ole delegaatteja, tämä rakenne vaikutti järkevimmältä
+    //
+    
     private static interface ArgumentOperation {
 
         public boolean call(Stack stack, Registry registers, int r1, int r2);
@@ -156,6 +235,17 @@ public class BasicOperation implements OpNode {
             return true;
         }
     }
+    private static class Set implements ArgumentOperation {
+
+        @Override
+        public boolean call(Stack stack, Registry reg, int r1, int r2) {
+            // TODO implementation might change?
+            // atm we use fixed point with 13 bits for decimals
+            double value = (double)reg.get(r2) / 8192.0;
+            reg.set(r1, value);
+            return true;
+        }
+    }
 
     private final Opcode operation;
     private final int register1;
@@ -199,8 +289,15 @@ public class BasicOperation implements OpNode {
         }
     }
 
+    /**
+     * Operations on linear genetic programs use a stack and registers to hold state.
+     * The registry has a program counter.
+     * @param stack         is the Stack (@see com.majesticbyte.genprog.Operations#Stack)
+     * @param registers     is the Registry (@see com.majesticbyte.genprog.Operations#Registry)
+     * @return              returns true if the operation succeeded
+     */
     @Override
-    public boolean Call(Stack stack, Registry registers) {
+    public boolean call(Stack stack, Registry registers) {
         return argOp.call(stack, registers, register1, register2);
     }
 

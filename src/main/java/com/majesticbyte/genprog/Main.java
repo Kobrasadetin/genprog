@@ -35,7 +35,7 @@ class OpNodeMockup implements OpNode {
     }
 
     @Override
-    public boolean Call(Stack stack, Registry registers) {
+    public boolean call(Stack stack, Registry registers) {
         counter.callCount++;
         return true;
     }
@@ -45,8 +45,17 @@ class DPMockup extends DataPoint {
 
 }
 
+/**
+ *
+ * @author mkarjanm
+ */
 public class Main {
 
+    /**
+     * No reason for having a main method at the moment.
+     * For some reason my NetBeans refuses to do debug test runs, so this is used for test debug
+     * @param args
+     */
     public static void main(String[] args) {
         Random testRng = new Random();
         BasicLGA test1;

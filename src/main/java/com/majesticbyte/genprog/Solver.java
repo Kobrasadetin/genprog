@@ -6,21 +6,35 @@
 package com.majesticbyte.genprog;
 
 /**
- *
+ * Solver runs a genetic programming batch with the given data on populations of given size and type.
+ * 
  * @author mkarjanm
  */
 public class Solver{
 
     private Population population;
+
+    /**
+     * TODO: will have arguments
+     */
     public Solver() {
         
     }
     
+    /**
+     * TODO implementation will change
+     * @param populationSize
+     * @param prototype
+     */
     public void initialize(int populationSize, Genotype prototype)
     {
         population = new Population(populationSize, prototype);
     }
     
+    /**
+     * TODO implementation will change
+     * @param batch
+     */
     public void runBatch(Batch batch)
     {
         

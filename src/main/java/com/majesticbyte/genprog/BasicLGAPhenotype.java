@@ -31,7 +31,7 @@ class BasicLGAPhenotype implements Phenotype{
         int e = genome.size();
         for(; i<e; i++)
         {
-            genome.get(i).Call(stack, registry);
+            genome.get(i).call(stack, registry);
         }      
         return input;
     }

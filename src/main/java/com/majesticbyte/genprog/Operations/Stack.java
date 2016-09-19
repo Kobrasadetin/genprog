@@ -11,33 +11,52 @@ package com.majesticbyte.genprog.Operations;
  */
 public class Stack {
     
-    private int maxSize;
-    private int currentSize;
+    private final int maxSize;
     private int pointer;
     private boolean overflow;
-    private double[] data;
+    private final double[] data;
 
+    /**
+     *
+     * @return
+     */
     public int getMaxSize() {
         return maxSize;
     }
 
+    /**
+     *
+     * @return
+     */
     public int getCurrentSize() {
-        return currentSize;
+        return pointer;
     }
 
+    /**
+     *
+     * @return
+     */
     public boolean isOverflown() {
         return overflow;
     }
     
+    /**
+     *
+     * @param maxSize
+     */
     public Stack(int maxSize)
     {
         this.maxSize = maxSize;
-        currentSize= 0;
-        pointer = -1;
+        pointer = 0;
         overflow = false;
         data = new double[maxSize];
     }
     
+    /**
+     *
+     * @param value
+     * @return
+     */
     public boolean push (double value)
     {
         if (pointer==maxSize)
@@ -45,20 +64,23 @@ public class Stack {
             overflow = true;
             return false;
         }
-        
-        pointer++;
-        data[pointer] = value;       
+        data[pointer++] = value; 
         return true;
     }
     
+    /**
+     *
+     * @param regNumber
+     * @param registry
+     * @return
+     */
     public boolean pop (int regNumber, Registry registry)
     {
-         if (pointer<0)
+         if (pointer<1)
          {
              return false;
          }
-         registry.set(regNumber, data[pointer]);
-         pointer--;
+         registry.set(regNumber, data[--pointer]);
          return true;
     }
     

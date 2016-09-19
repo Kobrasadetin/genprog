@@ -5,11 +5,17 @@
  */
 package com.majesticbyte.genprog.Operations;
 
+import java.util.Objects;
+
 /**
  *
  * @author mkarjanm
  */
 public class BasicOperation implements OpNode {
+    
+    /*
+    *   Inner classes
+    */
 
     /**
      *
@@ -42,12 +48,12 @@ public class BasicOperation implements OpNode {
         div(4),
 
         /**
-         *  Push to stack
+         *  Push r1 to stack. R2 is not used.
          */
         push(5),
 
         /**
-         *  Pop from stack
+         *  Pop from stack and set r1 to value. R2 is not used.
          */
         pop(6),
 
@@ -247,12 +253,17 @@ public class BasicOperation implements OpNode {
         }
     }
 
+    /*
+    *   BasicOperation class
+    *
+    */
+    
     private final Opcode operation;
     private final int register1;
     private final int register2;
     private final ArgumentOperation argOp;
 
-    BasicOperation(Opcode operation, int register1, int register2) {
+    public BasicOperation(Opcode operation, int register1, int register2) {
         this.operation = operation;
         this.register1 = register1;
         this.register2 = register2;
@@ -301,4 +312,37 @@ public class BasicOperation implements OpNode {
         return argOp.call(stack, registers, register1, register2);
     }
 
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 37 * hash + Objects.hashCode(this.operation);
+        hash = 37 * hash + this.register1;
+        hash = 37 * hash + this.register2;
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final BasicOperation other = (BasicOperation) obj;
+        if (this.register1 != other.register1) {
+            return false;
+        }
+        if (this.register2 != other.register2) {
+            return false;
+        }
+        if (this.operation != other.operation) {
+            return false;
+        }
+        return true;
+    }
+    
 }

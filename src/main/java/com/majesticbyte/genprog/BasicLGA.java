@@ -17,7 +17,7 @@ import java.util.Random;
 public class BasicLGA implements Genotype {
 
     private ArrayList<OpNode> genome;
-    private ArrayList<OpNode> possibleOperations;
+    private ArrayList<? extends OpNode> possibleOperations;
     private int size;
     private double feebleness;
     private Random rng;
@@ -30,7 +30,7 @@ public class BasicLGA implements Genotype {
         genome = new ArrayList();
     }
 
-    BasicLGA(ArrayList<OpNode> operations, int size, Random rng) {
+    BasicLGA(ArrayList<? extends OpNode> operations, int size, Random rng) {
         this.possibleOperations = operations;
         this.size = size;
         this.rng = rng;

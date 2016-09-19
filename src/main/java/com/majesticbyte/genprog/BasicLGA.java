@@ -22,7 +22,7 @@ public class BasicLGA implements Genotype {
     private double feebleness;
     private Random rng;
     private BasicLGAPhenotype myPhenotype;
-    
+
     BasicLGA(Random rng) {
         this.possibleOperations = null;
         this.size = 0;
@@ -42,9 +42,11 @@ public class BasicLGA implements Genotype {
     }
 
     /**
-     * Combines two genotypes. Allows for either parameter to be a reference to self.
-     * @param a     first genotype (order does not matter)
-     * @param b     second  genotype (order does not matter)
+     * Combines two genotypes. Allows for either parameter to be a reference to
+     * self.
+     *
+     * @param a first genotype (order does not matter)
+     * @param b second genotype (order does not matter)
      */
     @Override
     public void combine(Genotype a, Genotype b) {
@@ -60,7 +62,7 @@ public class BasicLGA implements Genotype {
             int newSize = mom1.size;
             int maxSplize = Math.min(newSize, mom2.size);
             int spliceSize = rng.nextInt(maxSplize);
-            int spliceStart = rng.nextInt(newSize - spliceSize);
+            int spliceStart = rng.nextInt(maxSplize - spliceSize);
             int spliceEnd = spliceSize + spliceStart;
             ArrayList<OpNode> newGenome = new ArrayList<>(newSize);
             for (int i = 0; i < spliceStart; i++) {
@@ -74,7 +76,7 @@ public class BasicLGA implements Genotype {
             }
             this.genome = newGenome;
             this.myPhenotype = null;
-            
+
         } else // not compatible genotypes
         {
             throw new IllegalArgumentException("BasicLGA combine operation: incompatible Genotype");
@@ -82,13 +84,14 @@ public class BasicLGA implements Genotype {
     }
 
     /**
-     * Returns a BasicLGAPhenotype for running. Should avoid rebuilding an already built phenotype.
-     * @return      a reference to BasicLGAPhenotype
+     * Returns a BasicLGAPhenotype for running. Should avoid rebuilding an
+     * already built phenotype.
+     *
+     * @return a reference to BasicLGAPhenotype
      */
     @Override
     public Phenotype getPhenotype() {
-        if (this.myPhenotype == null)
-        {
+        if (this.myPhenotype == null) {
             myPhenotype = new BasicLGAPhenotype(genome);
         }
         return myPhenotype;
@@ -96,7 +99,8 @@ public class BasicLGA implements Genotype {
 
     /**
      * Creates a new genotype with the same input-output scheme.
-     * @return      a new genotype
+     *
+     * @return a new genotype
      */
     @Override
     public Genotype cloneRandomized() {
@@ -105,9 +109,10 @@ public class BasicLGA implements Genotype {
     }
 
     /**
-     * TODO implementation might change
-     * Returns the cumulative error of genotype's phenotype evaluations (opposite of 'fitness')
-     * @return      cumulative error, larger numbers for poorer performance
+     * TODO implementation might change Returns the cumulative error of
+     * genotype's phenotype evaluations (opposite of 'fitness')
+     *
+     * @return cumulative error, larger numbers for poorer performance
      */
     @Override
     public Double getFeebleness() {
@@ -115,12 +120,14 @@ public class BasicLGA implements Genotype {
     }
 
     /**
-     * TODO implementation might change 
-     * Sets the cumulative error of genotype's phenotype evaluations (opposite of 'fitness')
-     * @param value     error
+     * TODO implementation might change Sets the cumulative error of genotype's
+     * phenotype evaluations (opposite of 'fitness')
+     *
+     * @param value error
      */
     @Override
-    public void setFeebleness(Double value) {
+    public void setFeebleness(Double value
+    ) {
         this.feebleness = value;
     }
 

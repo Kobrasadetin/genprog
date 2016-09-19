@@ -24,5 +24,6 @@ public class EvaluatorPrintout extends Evaluator {
             genotype.setFeebleness(genotype.getFeebleness() + error);
             System.out.println("evaluation result: "+output.toString());
         }
+        System.out.println("genotype feebleness: "+genotype.getFeebleness());
     }
 }

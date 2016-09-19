@@ -70,6 +70,10 @@ public class BasicLGATest {
 
     class DPMockup extends DataPoint {
 
+        public DPMockup() {
+            super(null, null);
+        }
+
     }
 
     public BasicLGATest() {

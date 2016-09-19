@@ -27,10 +27,11 @@ public class DataPoint{
         for (Double outputValue : output)
         {
             double error = outputValue-compare.get(i);
-            error = Math.pow(error, 2);
+            error = Math.min(Math.pow(error, 2), maxError());
             sum += error;
             i++;
         }
+        if (Double.isNaN(sum)) sum = maxError();
         return sum;
         
     }
@@ -38,7 +39,7 @@ public class DataPoint{
     //returned when program doesn't halt
     double maxError()
     {
-        return (double)output.size();
+        return 100000.0;
     }
 
     public ArrayList<Double> getInput() {

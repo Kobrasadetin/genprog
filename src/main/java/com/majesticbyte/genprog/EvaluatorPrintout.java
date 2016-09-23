@@ -12,7 +12,7 @@ package com.majesticbyte.genprog;
 public class EvaluatorPrintout extends Evaluator {
 
     @Override
-    public void evaluate(Genotype genotype, Batch batch) {
+    public void evaluate(Genotype genotype, Batch batch) {       
         for (DataPoint data : batch) {
             double error;
             ProgramResult output = genotype.getPhenotype().calculate(data);

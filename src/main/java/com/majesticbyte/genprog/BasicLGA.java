@@ -18,27 +18,32 @@ public class BasicLGA implements Genotype {
 
     private ArrayList<BasicLGAGene> genome;
     private ArrayList<? extends OpNode> possibleOperations;
-    private int size;
+    private int genomeSize;
+    private int programSize;
     private double feebleness;
     private Random rng;
     private BasicLGAPhenotype myPhenotype;
 
     BasicLGA(Random rng) {
         this.possibleOperations = null;
-        this.size = 0;
+        this.genomeSize = 0;
         this.rng = rng;
         genome = new ArrayList();
     }
 
-    BasicLGA(ArrayList<? extends OpNode> operations, int size, Random rng) {
+    BasicLGA(ArrayList<? extends OpNode> operations, int genomeSize, int programSize, Random rng) {
         this.possibleOperations = operations;
-        this.size = size;
+        this.genomeSize = genomeSize;
+        this.programSize = programSize;
         this.rng = rng;
         genome = new ArrayList();
-        int operationsSize = operations.size();
-        for (int i = 0; i < size; i++) {
-            genome.add(new BasicLGAGene(operations.get(rng.nextInt(operationsSize)), rng.nextInt(size),  rng.nextInt(256)));
+        for (int i = 0; i < genomeSize; i++) {
+            genome.add(newGeneFromPossible(operations, rng, programSize));
         }
+    }
+
+    private static BasicLGAGene newGeneFromPossible(ArrayList<? extends OpNode> operations, Random rng1, int programSize1) {
+        return new BasicLGAGene(operations.get(rng1.nextInt(operations.size())), rng1.nextInt(programSize1), rng1.nextInt(256));
     }
 
     /**
@@ -59,20 +64,21 @@ public class BasicLGA implements Genotype {
                 mom1 = (BasicLGA) b;
                 mom2 = (BasicLGA) a;
             }
-            int newSize = mom1.size;
-            int maxSplize = Math.min(newSize, mom2.size);
+            int newSize = mom1.genomeSize;
+            int maxSplize = Math.min(newSize, mom2.genomeSize);
             int spliceSize = rng.nextInt(maxSplize);
             int spliceStart = rng.nextInt(maxSplize - spliceSize);
             int spliceEnd = spliceSize + spliceStart;
+            int offset = rng.nextInt(3) == 0 ? rng.nextInt(maxSplize) : 0;
             ArrayList<BasicLGAGene> newGenome = new ArrayList<>(newSize);
             for (int i = 0; i < spliceStart; i++) {
-                newGenome.add(mom1.genome.get(i));
+                newGenome.add(mutate(mom1.genome.get(i), 16));
             }
             for (int i = spliceStart; i < spliceEnd; i++) {
-                newGenome.add(mom2.genome.get(i));
+                newGenome.add(mutate(mom2.genome.get((i + offset) % mom2.genomeSize),16));
             }
             for (int i = spliceEnd; i < newSize; i++) {
-                newGenome.add(mom1.genome.get(i));
+                newGenome.add(mutate(mom1.genome.get(i),16));
             }
             this.genome = newGenome;
             this.myPhenotype = null;
@@ -81,6 +87,13 @@ public class BasicLGA implements Genotype {
         {
             throw new IllegalArgumentException("BasicLGA combine operation: incompatible Genotype");
         }
+    }
+
+    private BasicLGAGene mutate(BasicLGAGene gene, int onceInEvery) {
+        if (rng.nextInt(onceInEvery) == 0) {
+            return newGeneFromPossible(possibleOperations, rng, programSize);
+        }
+        return gene;
     }
 
     /**
@@ -92,7 +105,7 @@ public class BasicLGA implements Genotype {
     @Override
     public Phenotype getPhenotype() {
         if (this.myPhenotype == null) {
-            myPhenotype = new BasicLGAPhenotype(genome, size);
+            myPhenotype = new BasicLGAPhenotype(genome, programSize, rng);
         }
         return myPhenotype;
     }
@@ -104,7 +117,7 @@ public class BasicLGA implements Genotype {
      */
     @Override
     public Genotype cloneRandomized() {
-        BasicLGA newGenotype = new BasicLGA(possibleOperations, this.size, rng);
+        BasicLGA newGenotype = new BasicLGA(possibleOperations, this.genomeSize, this.programSize, rng);
         return newGenotype;
     }
 
@@ -135,9 +148,11 @@ public class BasicLGA implements Genotype {
         StringBuilder s = new StringBuilder();
         String nl = System.getProperty("line.separator");
         s.append(nl).append("BasicLGA:").append(nl)
-                    .append("genotype:  ").append(genome.toString()).append(nl)
-                    .append("phenotype: ").append(this.getPhenotype().toString());
+                .append("genotype:  ").append(genome.toString()).append(nl)
+                .append("phenotype: ").append(this.getPhenotype().toString()).append(nl)
+                .append("feebl.: ").append(this.feebleness);
         return s.toString();
     }
+    
 
 }

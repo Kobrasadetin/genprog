@@ -6,15 +6,23 @@
 package com.majesticbyte.genprog;
 
 import com.majesticbyte.genprog.Operations.OpNode;
+import java.util.Random;
 
 /**
  *
  * @author mkarjanm
  */
 public class BasicLGAGene {
+
     private final OpNode operation;
     private final int programPosition;
     private final int strength;
+
+    public BasicLGAGene(BasicLGAGene gene) {
+        this.operation = gene.operation;
+        this.programPosition = gene.programPosition;
+        this.strength = gene.strength;
+    }
 
     public BasicLGAGene(OpNode operation, int programPosition, int strength) {
         this.operation = operation;
@@ -38,5 +46,9 @@ public class BasicLGAGene {
     public String toString() {
         return "BasicLGAGene{" + "op= " + operation + ", pos= " + programPosition + ", str= " + strength + '}';
     }
-    
+
+    BasicLGAGene mutate(int programSize, Random rng) {
+        return new BasicLGAGene( this.operation, rng.nextInt(programSize), rng.nextInt(256));
+    }
+
 }

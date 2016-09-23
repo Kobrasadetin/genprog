@@ -76,7 +76,11 @@ public class BasicOperation implements OpNode {
         /**
          * Copy value from r2 to r1
          */
-        mov(13);
+        mov(13),
+        /**
+         * Put state of stack in r1: -1 empty, 0 has next, 1 overflown
+         */
+        stck(14);
 
         private final int operation;
 
@@ -113,6 +117,7 @@ public class BasicOperation implements OpNode {
     private static interface ArgumentOperation {
 
         public boolean call(Stack stack, Registry registers, int r1, int r2);
+
     }
 
     private static class Noop implements ArgumentOperation {
@@ -244,7 +249,25 @@ public class BasicOperation implements OpNode {
         public boolean call(Stack stack, Registry reg, int r1, int r2) {
             // TODO implementation might change?
             // atm we use fixed point with 13 bits for decimals
-            double value = (double)r2 / 8192.0;
+            double value = (double) r2 / 8192.0;
+            reg.set(r1, value);
+            return true;
+        }
+    }
+
+    private static class StackState implements ArgumentOperation {
+
+        @Override
+        public boolean call(Stack stack, Registry reg, int r1, int r2) {
+            // TODO implementation might change?
+            // atm we use fixed point with 13 bits for decimals
+            double value = 0.0;
+            if (stack.isOverflown()) {
+                value = 1;
+            }
+            if (stack.isEmpty()) {
+                value = -1;
+            }
             reg.set(r1, value);
             return true;
         }
@@ -303,6 +326,9 @@ public class BasicOperation implements OpNode {
             case set:
                 argOp = new Set();
                 break;
+            case stck:
+                argOp = new StackState();
+                break;
             case noop:
             default:
                 argOp = new Noop();
@@ -323,6 +349,11 @@ public class BasicOperation implements OpNode {
     @Override
     public boolean call(Stack stack, Registry registers) {
         return argOp.call(stack, registers, register1, register2);
+    }
+    
+    public static BasicOperation NoOperation()
+    {
+        return new BasicOperation(Opcode.noop, 0, 0);
     }
 
     @Override
@@ -360,7 +391,14 @@ public class BasicOperation implements OpNode {
 
     @Override
     public String toString() {
-        return "BasicOp{" + "op=" + operation.name() + ", r1=" + register1 + ", r2=" + register2 + '}';
+        switch (operation) {
+            case set:
+                return "{set, " + register1 + ", " + (double) register2 / 8192.0 + '}';
+            case mov:
+                return "{mov, " + register1 + "<-" + register2 + '}';
+            default:
+                return "{" + operation.name() + ", " + register1 + ", " + register2 + '}';
+        }
     }
 
 }

@@ -40,6 +40,10 @@ public class Stack {
         return overflow;
     }
     
+    public boolean isEmpty() {
+        return pointer == 0;
+    }
+    
     /**
      *
      * @param maxSize

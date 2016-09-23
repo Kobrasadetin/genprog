@@ -119,7 +119,7 @@ public class Population {
         return fittest().toString();
     }
     
-    private Genotype fittest()
+    public Genotype fittest()
     {
         double leastFeebleness = Double.MAX_VALUE;
         int fittest = 0;

@@ -5,10 +5,13 @@
  */
 package com.majesticbyte.genprog;
 
+import com.majesticbyte.genprog.Operations.BasicOperation;
+import com.majesticbyte.genprog.Operations.DoubleOperation;
 import com.majesticbyte.genprog.Operations.OpNode;
 import com.majesticbyte.genprog.Operations.Registry;
 import com.majesticbyte.genprog.Operations.Stack;
 import java.util.ArrayList;
+import java.util.Random;
 
 /**
  *
@@ -16,11 +19,13 @@ import java.util.ArrayList;
  */
 class BasicLGAPhenotype implements Phenotype {
 
-    private ArrayList<OpNode> program;
+    private OpNode[] program;
     private int programSize;
-    private static final int JUMP_LIMIT = 256;
+    private static final int JUMP_LIMIT = 64;
+    private final Random rng;
 
-    BasicLGAPhenotype(ArrayList<BasicLGAGene> genome, int programSize) {
+    BasicLGAPhenotype(ArrayList<BasicLGAGene> genome, int programSize, Random rng) {
+        this.rng = rng;
         this.programSize = programSize;
         this.program = construct(genome);
     }
@@ -28,14 +33,15 @@ class BasicLGAPhenotype implements Phenotype {
     @Override
     public ProgramResult calculate(DataPoint input) {
         //TODO DO
-        Stack stack = new Stack(8);
+        Stack stack = new Stack(16);
         Registry registry = new Registry(8);
-        setInputToRegistry(input.getInput(), registry);
+        //setInputToRegistry(input.getInput(), registry);
+        setInputToStack(input.getInput(), stack);
         int i = 0;
         int jumpcount = 0;
-        int e = program.size();
+        int e = program.length;
         for (; i < e; i++) {
-            program.get(i).call(stack, registry);
+            program[i].call(stack, registry);
             if(registry.getPC()!=i){
                 jumpcount++;
                 i = registry.getPC();
@@ -57,23 +63,35 @@ class BasicLGAPhenotype implements Phenotype {
             registry.set(i, inputs.get(i));
         }
     }
+    
+    private void setInputToStack(ArrayList<Double> input, Stack stack) {
+        for (int i = 0; i < input.size(); i++) {
+            stack.push(input.get(i));
+        }
+    }
 
-    private ArrayList<OpNode> construct(ArrayList<BasicLGAGene> genome) {
+    private OpNode[] construct(ArrayList<BasicLGAGene> genome) {
         //TODO use strength property?
-        ArrayList<OpNode> nodeListing = new ArrayList<OpNode>();
+        OpNode[] nodeListing = new OpNode[programSize];
         BasicLGAGene[] programProto = new BasicLGAGene[programSize];
         int e = genome.size();
         for (int i = 0; i < e; i++) {
             BasicLGAGene gene = genome.get(i);
             int position = gene.getProgramPosition();
             if (position < programSize) {
-                programProto[position] = gene;
+                if (programProto[position] == null) programProto[position] = gene;
+                else{
+                    programProto[position] = new BasicLGADoubleGene(programProto[position],gene, rng) ;
+                }
             }
         }
         for (int i = 0; i < programSize; i++) {
             BasicLGAGene gene = programProto[i];
             if (gene != null) {
-                nodeListing.add(gene.getOperation());
+                nodeListing[i] = (gene.getOperation());
+            }else
+            {
+                nodeListing[i] = BasicOperation.NoOperation();
             }
         }
         return nodeListing;
@@ -81,7 +99,13 @@ class BasicLGAPhenotype implements Phenotype {
 
     @Override
     public String toString() {
-        return "BLGAPhenotype{ operations:" + program.size() + ", " + program + '}';
+        StringBuilder s = new StringBuilder();
+        int size = program.length;
+        for (int i = 0; i < size; i++)
+        {
+            s.append(program[i].toString()).append(", ");
+        }
+        return "BLGAPhenotype{ operations:" + program.length + ", " + s.toString() + '}';
     }
 
 }

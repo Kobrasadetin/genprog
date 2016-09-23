@@ -87,8 +87,8 @@ public class BasicLGATest {
         mockupOperations.add(operation1);
         mockupOperations.add(operation2);
         mockupOperations.add(operation3);
-        test1 = new BasicLGA(mockupOperations, 12, testRng);
-        test2 = new BasicLGA(mockupOperations, 16, testRng);
+        test1 = new BasicLGA(mockupOperations, 12, 10, testRng);
+        test2 = new BasicLGA(mockupOperations, 16, 10, testRng);
     }
 
     @Test

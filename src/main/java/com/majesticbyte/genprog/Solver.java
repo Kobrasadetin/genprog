@@ -52,18 +52,17 @@ public class Solver {
             ArrayList<Double> output = new ArrayList<>(Arrays.asList((double) Math.pow(2,i)+ i*5 - 2));
             batch.add(new DataPoint(input, output));
         }
+        quietEvaluation.setBatch(batch);
 
         for (int i = 0; i < 2000; i++) {
-            Evaluator evaluator = quietEvaluation;
             if (i % 500 == 0 || i == 1999) {
                 System.out.println("\n\n ==  GEN "+i+" === \n \n");
-                evaluator = evaluationPrinter;
+                 System.out.println(population.printFittest(quietEvaluation));
             }
-            population.evaluate(evaluator, batch);
-            if (i != 1999) population.tournament(0.1); 
+            if (i != 1999) population.tournament(0.6, quietEvaluation); 
         }
 
-        System.out.println("fittest: \n" + population.printFittest());
+        System.out.println("fittest: \n" + population.printFittest(quietEvaluation));
     }
 
     /**

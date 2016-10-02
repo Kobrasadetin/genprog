@@ -5,17 +5,28 @@
  */
 package com.majesticbyte.genprog;
 
+import java.util.HashMap;
+
 /**
  *
  * @author mkarjanm
  */
 class Evaluator {
     private Batch currentBatch;
+    protected HashMap<Phenotype, Double> knownFeebleness;
+    protected int evaluationCount = 0;
     public Evaluator()
     {
-        
+        knownFeebleness= new HashMap<Phenotype, Double>();
     }
-    public void evaluate(Genotype genotype, Batch batch) {
+    public double evaluate(Genotype genotype, Batch batch) {
+        double total = 0;
+        Phenotype phenotype = genotype.getPhenotype();
+        if (knownFeebleness.containsKey(phenotype))
+        {
+            return knownFeebleness.get(phenotype);
+        }
+        evaluationCount++;
         for (DataPoint data : batch) {
             double error;
             ProgramResult output = genotype.getPhenotype().calculate(data);
@@ -24,15 +35,24 @@ class Evaluator {
             } else {
                 error = data.getError(output.getOutput());
             }
-            genotype.setFeebleness(genotype.getFeebleness() + error);
+            total += error;
         }
+        knownFeebleness.put(phenotype, total);
+                
+        return total;
     }
-    public void evaluate(Genotype genotype) {
+    public double evaluate(Genotype genotype) {
         if (currentBatch == null)
         {
             throw new IllegalArgumentException("no batch");
         }
-        evaluate(genotype, currentBatch);
+        return evaluate(genotype, currentBatch);
     }
+
+    public void setBatch(Batch currentBatch) {
+        this.currentBatch = currentBatch;
+    }
+
+
     
 }

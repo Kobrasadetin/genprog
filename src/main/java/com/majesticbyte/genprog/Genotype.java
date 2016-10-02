@@ -30,17 +30,4 @@ public interface Genotype {
      */
     public Genotype cloneRandomized();
 
-    /**
-     * TODO implementation might change
-     * Returns the cumulative error of genotype's phenotype evaluations (opposite of 'fitness')
-     * @return      cumulative error, larger numbers for poorer performance
-     */
-    public Double getFeebleness();
-
-    /**
-     * TODO implementation might change 
-     * Sets the cumulative error of genotype's phenotype evaluations (opposite of 'fitness')
-     * @param value     error
-     */
-    public void setFeebleness(Double value);
 }

@@ -121,36 +121,13 @@ public class BasicLGA implements Genotype {
         return newGenotype;
     }
 
-    /**
-     * TODO implementation might change Returns the cumulative error of
-     * genotype's phenotype evaluations (opposite of 'fitness')
-     *
-     * @return cumulative error, larger numbers for poorer performance
-     */
-    @Override
-    public Double getFeebleness() {
-        return feebleness;
-    }
-
-    /**
-     * TODO implementation might change Sets the cumulative error of genotype's
-     * phenotype evaluations (opposite of 'fitness')
-     *
-     * @param value error
-     */
-    @Override
-    public void setFeebleness(Double value) {
-        this.feebleness = value;
-    }
-
     @Override
     public String toString() {
         StringBuilder s = new StringBuilder();
         String nl = System.getProperty("line.separator");
         s.append(nl).append("BasicLGA:").append(nl)
                 .append("genotype:  ").append(genome.toString()).append(nl)
-                .append("phenotype: ").append(this.getPhenotype().toString()).append(nl)
-                .append("feebl.: ").append(this.feebleness);
+                .append("phenotype: ").append(this.getPhenotype().toString()).append(nl);
         return s.toString();
     }
     

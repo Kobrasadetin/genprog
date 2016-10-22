@@ -12,18 +12,22 @@ package com.majesticbyte.genprog;
 public class EvaluatorPrintout extends Evaluator {
 
     @Override
-    public void evaluate(Genotype genotype, Batch batch) {       
+    public double evaluate(Genotype genotype, Batch batch) {
+        double total = 0;
+        Phenotype phenotype = genotype.getPhenotype();
         for (DataPoint data : batch) {
             double error;
+            System.out.println("input:"+ data.getInput() + ", expected :"+data.getOutput());
             ProgramResult output = genotype.getPhenotype().calculate(data);
+            System.out.println("output:"+ output);
             if (output.isDeadlock()) {
                 error = data.maxError();
             } else {
                 error = data.getError(output.getOutput());
             }
-            genotype.setFeebleness(genotype.getFeebleness() + error);
-            System.out.println("evaluation result: "+output.toString());
+            total += error;
         }
-        System.out.println("genotype feebleness: "+genotype.getFeebleness());
+        return total;
     }
+
 }

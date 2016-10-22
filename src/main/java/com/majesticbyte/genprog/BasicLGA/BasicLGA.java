@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.majesticbyte.genprog.LGA;
+package com.majesticbyte.genprog.BasicLGA;
 
 import com.majesticbyte.genprog.Genotype;
 import com.majesticbyte.genprog.Operations.OpNode;
@@ -77,10 +77,10 @@ public class BasicLGA implements Genotype {
                 newGenome.add(mutate(mom1.genome.get(i), 16));
             }
             for (int i = spliceStart; i < spliceEnd; i++) {
-                newGenome.add(mutate(mom2.genome.get((i + offset) % mom2.genomeSize),16));
+                newGenome.add(mutate(mom2.genome.get((i + offset) % mom2.genomeSize), 16));
             }
             for (int i = spliceEnd; i < newSize; i++) {
-                newGenome.add(mutate(mom1.genome.get(i),16));
+                newGenome.add(mutate(mom1.genome.get(i), 16));
             }
             this.genome = newGenome;
             this.myPhenotype = null;
@@ -93,7 +93,12 @@ public class BasicLGA implements Genotype {
 
     private BasicLGAGene mutate(BasicLGAGene gene, int onceInEvery) {
         if (rng.nextInt(onceInEvery) == 0) {
-            return newGeneFromPossible(possibleOperations, rng, programSize);
+            if (rng.nextInt(2) == 0) {
+                return gene.mutate(programSize, rng);
+            } else {
+                return newGeneFromPossible(possibleOperations, rng, programSize);
+            }
+            //return newGeneFromPossible(possibleOperations, rng, programSize);
         }
         return gene;
     }
@@ -123,38 +128,14 @@ public class BasicLGA implements Genotype {
         return newGenotype;
     }
 
-    /**
-     * TODO implementation might change Returns the cumulative error of
-     * genotype's phenotype evaluations (opposite of 'fitness')
-     *
-     * @return cumulative error, larger numbers for poorer performance
-     */
-    @Override
-    public Double getFeebleness() {
-        return feebleness;
-    }
-
-    /**
-     * TODO implementation might change Sets the cumulative error of genotype's
-     * phenotype evaluations (opposite of 'fitness')
-     *
-     * @param value error
-     */
-    @Override
-    public void setFeebleness(Double value) {
-        this.feebleness = value;
-    }
-
     @Override
     public String toString() {
         StringBuilder s = new StringBuilder();
         String nl = System.getProperty("line.separator");
         s.append(nl).append("BasicLGA:").append(nl)
                 .append("genotype:  ").append(genome.toString()).append(nl)
-                .append("phenotype: ").append(this.getPhenotype().toString()).append(nl)
-                .append("feebl.: ").append(this.feebleness);
+                .append("phenotype: ").append(this.getPhenotype().toString()).append(nl);
         return s.toString();
     }
-    
 
 }

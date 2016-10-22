@@ -3,8 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.majesticbyte.genprog.LGA;
+package com.majesticbyte.genprog.BasicLGA;
 
+import com.majesticbyte.genprog.Operations.BasicOperation;
 import com.majesticbyte.genprog.Operations.OpNode;
 import java.util.Random;
 
@@ -14,9 +15,9 @@ import java.util.Random;
  */
 public class BasicLGAGene {
 
-    private final OpNode operation;
-    private final int programPosition;
-    private final int strength;
+    protected final OpNode operation;
+    protected final int programPosition;
+    protected final int strength;
 
     public BasicLGAGene(BasicLGAGene gene) {
         this.operation = gene.operation;
@@ -48,6 +49,8 @@ public class BasicLGAGene {
     }
 
     BasicLGAGene mutate(int programSize, Random rng) {
+        BasicOperation mutation = ((BasicOperation)this.operation).mutation(rng.nextInt(4096));
+        if (mutation!=null) return new BasicLGAGene(mutation, programPosition, strength);
         return new BasicLGAGene( this.operation, rng.nextInt(programSize), rng.nextInt(256));
     }
 

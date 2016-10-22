@@ -5,34 +5,48 @@
  */
 package com.majesticbyte.genprog;
 
+import java.util.HashMap;
+
 /**
  *
  * @author mkarjanm
  */
 class Evaluator {
     private Batch currentBatch;
+    protected int evaluationCount = 0;
     public Evaluator()
     {
-        
     }
-    public void evaluate(Genotype genotype, Batch batch) {
+    public double evaluate(Genotype genotype, Batch batch) {
+        double total = 0;
+        evaluationCount++;
         for (DataPoint data : batch) {
             double error;
             ProgramResult output = genotype.getPhenotype().calculate(data);
             if (output.isDeadlock()) {
-                error = data.maxError();
+                error = data.getError(output.getOutput());
             } else {
                 error = data.getError(output.getOutput());
             }
-            genotype.setFeebleness(genotype.getFeebleness() + error);
+            total += error;
         }
+                
+        return total;
     }
-    public void evaluate(Genotype genotype) {
+    public double evaluate(Genotype genotype) {
         if (currentBatch == null)
         {
             throw new IllegalArgumentException("no batch");
         }
-        evaluate(genotype, currentBatch);
+        return evaluate(genotype, currentBatch);
+    }
+
+    public void setBatch(Batch currentBatch) {
+        this.currentBatch = currentBatch;
+    }
+    
+        public int evcount() {
+       return  this.evaluationCount;
     }
     
 }

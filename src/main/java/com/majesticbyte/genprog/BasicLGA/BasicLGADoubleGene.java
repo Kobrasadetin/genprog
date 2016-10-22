@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.majesticbyte.genprog.LGA;
+package com.majesticbyte.genprog.BasicLGA;
 
 import com.majesticbyte.genprog.Operations.DoubleOperation;
 import com.majesticbyte.genprog.Operations.OpNode;
@@ -25,9 +25,10 @@ public class BasicLGADoubleGene extends BasicLGAGene{
 
     @Override
     public OpNode getOperation() {
-        /*if (rng.nextInt(256)>gene2.getStrength()) {
+        //TODO DECIDE ON THIS FUNCTIONALITY...
+        if (rng.nextInt(256)<super.getStrength()) {
             return super.getOperation();
-        }*/
+        }
         return gene2.getOperation();
     }
 

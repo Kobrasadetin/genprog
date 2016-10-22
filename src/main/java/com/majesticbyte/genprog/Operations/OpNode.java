@@ -19,4 +19,5 @@ public interface OpNode {
      * @return              returns true if the operation succeeded
      */
     public boolean call(Stack stack, Registry registers);
+    
 }

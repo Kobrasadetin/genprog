@@ -5,6 +5,7 @@
  */
 package com.majesticbyte.genprog;
 
+import com.majesticbyte.genprog.BasicLGA.BasicLGA;
 import com.majesticbyte.genprog.Operations.BasicOperation.Opcode;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -30,8 +31,10 @@ public class Solver {
         LinearOpnodeBuilder builder = new LinearOpnodeBuilder();
         builder.addOperation(Opcode.add).addOperation(Opcode.sub).addOperation(Opcode.mul).addOperation(Opcode.div)
                 .r1Range(0, 1).r2Range(1, 3)
-                .addOperation(Opcode.jneg).addOperation(Opcode.jpos).addOperation(Opcode.jzer).addOperation(Opcode.jump)
-                .r1Range(0, 0).r2Range(0, 48).r2StepSize(8)
+                .addOperation(Opcode.jneg).addOperation(Opcode.jpos).addOperation(Opcode.jzer)
+                .r1Range(0, 0).r2Range(0, 25).r2StepSize(3)
+                .addOperation(Opcode.jump)
+                .r1Range(0, 0).r2Range(1, 25).r2StepSize(3)
                 .addOperation(Opcode.push).addOperation(Opcode.pop)
                 .r1Range(0, 3).r2Range(0, 9)
                 .addOperation(Opcode.stck).r1Range(0, 3).r2Range(0, 0)
@@ -39,30 +42,34 @@ public class Solver {
                 .addOperation(Opcode.set).r1Range(0, 3).r2Range(-16384, 16384).r2StepSize(2048)
                 .addOperation(Opcode.mov).r1Range(0, 3).r2Range(0, 3);
 
-        initialize(200, new BasicLGA(builder.toArray(), 64, 48, rng));
+        initialize(800, new BasicLGA(builder.toArray(), 64, 25, rng));
 
         System.out.println(population);
 
         EvaluatorPrintout evaluationPrinter = new EvaluatorPrintout();
-        Evaluator quietEvaluation = new Evaluator();
+        Evaluator quietEvaluation = new EvaluatorCorrelation();
 
         Batch batch = new Batch();
-        for (int i = 0; i < 12; i++) {
+        for (double i = 0; i < 12; i+= 1.5) {
             ArrayList<Double> input = new ArrayList<>(Arrays.asList((double) i));
-            ArrayList<Double> output = new ArrayList<>(Arrays.asList((double) Math.pow(2,i)+ i*5 - 2));
+            ArrayList<Double> output = new ArrayList<>(Arrays.asList((double) Math.pow(3, i) + i * 5 - 2));
             batch.add(new DataPoint(input, output));
         }
         quietEvaluation.setBatch(batch);
+        evaluationPrinter.setBatch(batch);
 
-        for (int i = 0; i < 2000; i++) {
-            if (i % 500 == 0 || i == 1999) {
-                System.out.println("\n\n ==  GEN "+i+" === \n \n");
-                 System.out.println(population.printFittest(quietEvaluation));
+        for (int i = 0; i < 20000; i++) {
+            if (i % 500 == 0 || i == 19999) {
+                System.out.println("\n\n ==  GEN " + i + " === \n \n");
+                System.out.println(population.printFittest(quietEvaluation));
             }
-            if (i != 1999) population.tournament(0.6, quietEvaluation); 
+            if (i != 19999) {
+                population.tournament(0.4, quietEvaluation);
+            }
         }
 
         System.out.println("fittest: \n" + population.printFittest(quietEvaluation));
+        System.out.println(evaluationPrinter.evaluate(population.getFittest(quietEvaluation)));      
     }
 
     /**
@@ -83,4 +90,5 @@ public class Solver {
     public void runBatch(Batch batch) {
 
     }
+    
 }

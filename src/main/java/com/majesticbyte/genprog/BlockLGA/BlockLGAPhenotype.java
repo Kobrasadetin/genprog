@@ -3,13 +3,17 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.majesticbyte.genprog;
+package com.majesticbyte.genprog.BlockLGA;
 
+import com.majesticbyte.genprog.BasicLGA.*;
+import com.majesticbyte.genprog.DataPoint;
 import com.majesticbyte.genprog.Operations.BasicOperation;
 import com.majesticbyte.genprog.Operations.DoubleOperation;
 import com.majesticbyte.genprog.Operations.OpNode;
 import com.majesticbyte.genprog.Operations.Registry;
 import com.majesticbyte.genprog.Operations.Stack;
+import com.majesticbyte.genprog.Phenotype;
+import com.majesticbyte.genprog.ProgramResult;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -17,14 +21,14 @@ import java.util.Random;
  *
  * @author mkarjanm
  */
-class BasicLGAPhenotype implements Phenotype {
+public class BlockLGAPhenotype implements Phenotype {
 
     private OpNode[] program;
     private int programSize;
     private static final int JUMP_LIMIT = 64;
     private final Random rng;
 
-    BasicLGAPhenotype(ArrayList<BasicLGAGene> genome, int programSize, Random rng) {
+    BlockLGAPhenotype(ArrayList<BlockLGAGene> genome, int programSize, Random rng) {
         this.rng = rng;
         this.programSize = programSize;
         this.program = construct(genome);
@@ -35,6 +39,7 @@ class BasicLGAPhenotype implements Phenotype {
         //TODO DO
         Stack stack = new Stack(16);
         Registry registry = new Registry(8);
+        boolean deadlock = false;
         //setInputToRegistry(input.getInput(), registry);
         setInputToStack(input.getInput(), stack);
         int i = 0;
@@ -42,35 +47,35 @@ class BasicLGAPhenotype implements Phenotype {
         int e = program.length;
         for (; i < e; i++) {
             program[i].call(stack, registry);
-            if(registry.getPC()!=i){
+            if (registry.getPC() != i) {
                 jumpcount++;
-                i = registry.getPC();
+                if (jumpcount < JUMP_LIMIT) {
+                    i = registry.getPC();
+                } else {
+                    deadlock = true;
+                }
+            } else {
+                registry.incrementPC();
             }
-            if (jumpcount>JUMP_LIMIT)
-            {
-                return new ProgramResult(null, true);
-            }
-            registry.incrementPC();
         }
         ArrayList<Double> result = new ArrayList<Double>();
         result.add(registry.get(0));
         return new ProgramResult(result, false);
     }
-    
-    private void setInputToRegistry(ArrayList<Double> inputs, Registry registry)
-    {
+
+    private void setInputToRegistry(ArrayList<Double> inputs, Registry registry) {
         for (int i = 0; i < inputs.size(); i++) {
             registry.set(i, inputs.get(i));
         }
     }
-    
+
     private void setInputToStack(ArrayList<Double> input, Stack stack) {
         for (int i = 0; i < input.size(); i++) {
             stack.push(input.get(i));
         }
     }
 
-    private OpNode[] construct(ArrayList<BasicLGAGene> genome) {
+    private OpNode[] construct(ArrayList<BlockLGAGene> genome) {
         //TODO use strength property?
         OpNode[] nodeListing = new OpNode[programSize];
         BasicLGAGene[] programProto = new BasicLGAGene[programSize];
@@ -79,9 +84,10 @@ class BasicLGAPhenotype implements Phenotype {
             BasicLGAGene gene = genome.get(i);
             int position = gene.getProgramPosition();
             if (position < programSize) {
-                if (programProto[position] == null) programProto[position] = gene;
-                else{
-                    programProto[position] = new BasicLGADoubleGene(programProto[position],gene, rng) ;
+                if (programProto[position] == null) {
+                    programProto[position] = gene;
+                } else {
+                    programProto[position] = new BasicLGADoubleGene(programProto[position], gene, rng);
                 }
             }
         }
@@ -89,8 +95,7 @@ class BasicLGAPhenotype implements Phenotype {
             BasicLGAGene gene = programProto[i];
             if (gene != null) {
                 nodeListing[i] = (gene.getOperation());
-            }else
-            {
+            } else {
                 nodeListing[i] = BasicOperation.NoOperation();
             }
         }
@@ -101,8 +106,7 @@ class BasicLGAPhenotype implements Phenotype {
     public String toString() {
         StringBuilder s = new StringBuilder();
         int size = program.length;
-        for (int i = 0; i < size; i++)
-        {
+        for (int i = 0; i < size; i++) {
             s.append(program[i].toString()).append(", ");
         }
         return "BLGAPhenotype{ operations:" + program.length + ", " + s.toString() + '}';

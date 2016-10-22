@@ -34,7 +34,7 @@ public class BasicOperation implements OpNode {
          */
         add(2),
         /**
-         * Substract
+         * Subtract
          */
         sub(3),
         /**
@@ -158,7 +158,7 @@ public class BasicOperation implements OpNode {
         }
     }
 
-    private static class Substract implements ArgumentOperation {
+    private static class Subtract implements ArgumentOperation {
 
         @Override
         public boolean call(Stack stack, Registry reg, int r1, int r2) {
@@ -297,7 +297,7 @@ public class BasicOperation implements OpNode {
                 argOp = new Add();
                 break;
             case sub:
-                argOp = new Substract();
+                argOp = new Subtract();
                 break;
             case jump:
                 argOp = new Jump(JumpCondition.none);
@@ -399,6 +399,13 @@ public class BasicOperation implements OpNode {
             default:
                 return "{" + operation.name() + ", " + register1 + ", " + register2 + '}';
         }
+    }
+    
+    public BasicOperation mutation(int random)
+    {
+        if (this.operation == Opcode.set)
+            return new BasicOperation(operation, register1, (register2 * (random + 1024)/ 2048));
+        return null;
     }
 
 }

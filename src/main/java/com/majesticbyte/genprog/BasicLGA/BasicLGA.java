@@ -3,9 +3,11 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.majesticbyte.genprog;
+package com.majesticbyte.genprog.BasicLGA;
 
+import com.majesticbyte.genprog.Genotype;
 import com.majesticbyte.genprog.Operations.OpNode;
+import com.majesticbyte.genprog.Phenotype;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -24,14 +26,14 @@ public class BasicLGA implements Genotype {
     private Random rng;
     private BasicLGAPhenotype myPhenotype;
 
-    BasicLGA(Random rng) {
+    public BasicLGA(Random rng) {
         this.possibleOperations = null;
         this.genomeSize = 0;
         this.rng = rng;
         genome = new ArrayList();
     }
 
-    BasicLGA(ArrayList<? extends OpNode> operations, int genomeSize, int programSize, Random rng) {
+    public BasicLGA(ArrayList<? extends OpNode> operations, int genomeSize, int programSize, Random rng) {
         this.possibleOperations = operations;
         this.genomeSize = genomeSize;
         this.programSize = programSize;
@@ -75,10 +77,10 @@ public class BasicLGA implements Genotype {
                 newGenome.add(mutate(mom1.genome.get(i), 16));
             }
             for (int i = spliceStart; i < spliceEnd; i++) {
-                newGenome.add(mutate(mom2.genome.get((i + offset) % mom2.genomeSize),16));
+                newGenome.add(mutate(mom2.genome.get((i + offset) % mom2.genomeSize), 16));
             }
             for (int i = spliceEnd; i < newSize; i++) {
-                newGenome.add(mutate(mom1.genome.get(i),16));
+                newGenome.add(mutate(mom1.genome.get(i), 16));
             }
             this.genome = newGenome;
             this.myPhenotype = null;
@@ -91,7 +93,12 @@ public class BasicLGA implements Genotype {
 
     private BasicLGAGene mutate(BasicLGAGene gene, int onceInEvery) {
         if (rng.nextInt(onceInEvery) == 0) {
-            return newGeneFromPossible(possibleOperations, rng, programSize);
+            if (rng.nextInt(2) == 0) {
+                return gene.mutate(programSize, rng);
+            } else {
+                return newGeneFromPossible(possibleOperations, rng, programSize);
+            }
+            //return newGeneFromPossible(possibleOperations, rng, programSize);
         }
         return gene;
     }
@@ -130,6 +137,5 @@ public class BasicLGA implements Genotype {
                 .append("phenotype: ").append(this.getPhenotype().toString()).append(nl);
         return s.toString();
     }
-    
 
 }

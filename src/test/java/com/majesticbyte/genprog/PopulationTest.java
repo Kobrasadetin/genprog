@@ -57,7 +57,7 @@ public class PopulationTest {
         System.out.println("tournament");
         double killRatio = 0.0;
         Population instance = null;
-        instance.tournament(killRatio);
+        instance.tournament(killRatio, new Evaluator());
         fail("The test case is a prototype.");
     }
 
@@ -66,7 +66,7 @@ public class PopulationTest {
         System.out.println("printFittest");
         Population instance = null;
         String expResult = "";
-        String result = instance.printFittest();
+        String result = instance.printFittest( new Evaluator());
         assertEquals(expResult, result);
         fail("The test case is a prototype.");
     }

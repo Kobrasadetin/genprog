@@ -20,6 +20,7 @@ public class Population {
     private int populationSize;
     private int[] substitutes;
     private int[] killList;
+    private Double[] knownScore;
     
     /**
      * The constructor uses the cloneRandomized method of the given Genotype prototype to create a population of genotypes.
@@ -31,6 +32,7 @@ public class Population {
     {
         this.rng = rng;
         this.populationSize = populationSize;
+        this.knownScore = new Double[populationSize];
         substitutes = new int[populationSize];
         killList = new int[populationSize];
         genotypes = new ArrayList();
@@ -66,25 +68,23 @@ public class Population {
         while(killCount<targetKills)
         {
             int alive = poolSize-killCount;
-            int firstpick = rng.nextInt(alive);
-            int otherpick = rng.nextInt(alive);
+            int firstIndex = rng.nextInt(alive);
+            int otherIndex = rng.nextInt(alive);
             //if we picked the same, just pick the next one - the bias should be meaningless
-            if (firstpick == otherpick) otherpick = (firstpick+1)%alive;
-            Genotype first = genotypes.get(substitutes[firstpick]);
-            Double firstFeebleness = evaluator.evaluate(first);
-            Genotype other = genotypes.get(substitutes[otherpick]);
-            Double otherFeebleness = evaluator.evaluate(first);
+            if (firstIndex == otherIndex) otherIndex = (firstIndex+1)%alive;
+            Double firstFeebleness = evalGenotype(substitutes[firstIndex], evaluator);
+            Double otherFeebleness = evalGenotype(substitutes[otherIndex], evaluator);
             boolean firstWins = firstFeebleness<otherFeebleness;
             if (firstWins) {
                 //add killed  to killList, substitute the last specimen (or second-to-last if we were last)
-                int killed = substitutes[otherpick];
+                int killed = substitutes[otherIndex];
                 killList[killCount] = killed;
-                substitutes[firstpick] = otherpick == (alive-1) ? alive-2 : alive-1;
+                substitutes[otherIndex] = otherIndex == (alive-1) ? alive-2 : alive-1;
             } else
             {
-                int killed = substitutes[firstpick];
+                int killed = substitutes[firstIndex];
                 killList[killCount] = killed;
-                substitutes[otherpick] = firstpick == (alive-1) ? alive-2 : alive-1;
+                substitutes[firstIndex] = firstIndex == (alive-1) ? alive-2 : alive-1;
             }
             killCount++;
         }
@@ -94,13 +94,23 @@ public class Population {
        {
             Genotype parent1 = genotypes.get(substitutes[rng.nextInt(alive)]);
             Genotype parent2 = genotypes.get(substitutes[rng.nextInt(alive)]);
-            genotypes.get(i).combine(parent1, parent2);
+            genotypes.get(killList[i]).combine(parent1, parent2);
+            knownScore[i] = null;
 
        }
         
         
     }
     
+    private double evalGenotype(int i, Evaluator evaluator)
+    {
+        if (knownScore[i] == null)
+        {
+            knownScore[i] = evaluator.evaluate(genotypes.get(i));
+        }
+        return  knownScore[i];
+        
+    }
     
     private void fillArray(int[] array)
     {
@@ -124,12 +134,14 @@ public class Population {
         for (int i = 0; i<genotypes.size(); i++)
         {
             double feeble = evaluator.evaluate(genotypes.get(i));
+            System.out.print(feeble+", ");
             if (feeble<leastFeebleness)
             {
                 fittest = i;
                 leastFeebleness = feeble;
             }
         }
+         System.out.println();
         return genotypes.get(fittest);
     }
    

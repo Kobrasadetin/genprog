@@ -15,12 +15,11 @@ public class EvaluatorPrintout extends Evaluator {
     public double evaluate(Genotype genotype, Batch batch) {
         double total = 0;
         Phenotype phenotype = genotype.getPhenotype();
-        if (knownFeebleness.containsKey(phenotype)) {
-            return knownFeebleness.get(phenotype);
-        }
         for (DataPoint data : batch) {
             double error;
+            System.out.println("input:"+ data.getInput() + ", expected :"+data.getOutput());
             ProgramResult output = genotype.getPhenotype().calculate(data);
+            System.out.println("output:"+ output);
             if (output.isDeadlock()) {
                 error = data.maxError();
             } else {
@@ -28,8 +27,6 @@ public class EvaluatorPrintout extends Evaluator {
             }
             total += error;
         }
-        knownFeebleness.put(phenotype, total);
-        System.out.println(this.evaluationCount);
         return total;
     }
 

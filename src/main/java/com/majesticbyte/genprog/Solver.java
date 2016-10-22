@@ -5,6 +5,7 @@
  */
 package com.majesticbyte.genprog;
 
+import com.majesticbyte.genprog.LGA.BasicLGA;
 import com.majesticbyte.genprog.Operations.BasicOperation.Opcode;
 import java.util.ArrayList;
 import java.util.Arrays;

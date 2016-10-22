@@ -3,9 +3,11 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.majesticbyte.genprog;
+package com.majesticbyte.genprog.LGA;
 
+import com.majesticbyte.genprog.Genotype;
 import com.majesticbyte.genprog.Operations.OpNode;
+import com.majesticbyte.genprog.Phenotype;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -24,14 +26,14 @@ public class BasicLGA implements Genotype {
     private Random rng;
     private BasicLGAPhenotype myPhenotype;
 
-    BasicLGA(Random rng) {
+    public BasicLGA(Random rng) {
         this.possibleOperations = null;
         this.genomeSize = 0;
         this.rng = rng;
         genome = new ArrayList();
     }
 
-    BasicLGA(ArrayList<? extends OpNode> operations, int genomeSize, int programSize, Random rng) {
+    public BasicLGA(ArrayList<? extends OpNode> operations, int genomeSize, int programSize, Random rng) {
         this.possibleOperations = operations;
         this.genomeSize = genomeSize;
         this.programSize = programSize;

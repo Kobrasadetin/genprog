@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.majesticbyte.genprog;
+package com.majesticbyte.genprog.LGA;
 
 import com.majesticbyte.genprog.Operations.OpNode;
 import java.util.Random;

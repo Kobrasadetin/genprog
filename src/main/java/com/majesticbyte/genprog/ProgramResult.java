@@ -11,7 +11,7 @@ import java.util.ArrayList;
  *
  * @author mkarjanm
  */
-class ProgramResult {
+public class ProgramResult {
 
     private ArrayList<Double> output;
     private boolean deadlock;

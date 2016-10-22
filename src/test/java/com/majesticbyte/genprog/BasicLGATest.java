@@ -5,6 +5,8 @@
  */
 package com.majesticbyte.genprog;
 
+import com.majesticbyte.genprog.LGA.BasicLGAPhenotype;
+import com.majesticbyte.genprog.LGA.BasicLGA;
 import com.majesticbyte.genprog.Operations.OpNode;
 import com.majesticbyte.genprog.Operations.Registry;
 import com.majesticbyte.genprog.Operations.Stack;

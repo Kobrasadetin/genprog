@@ -3,13 +3,16 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.majesticbyte.genprog;
+package com.majesticbyte.genprog.LGA;
 
+import com.majesticbyte.genprog.DataPoint;
 import com.majesticbyte.genprog.Operations.BasicOperation;
 import com.majesticbyte.genprog.Operations.DoubleOperation;
 import com.majesticbyte.genprog.Operations.OpNode;
 import com.majesticbyte.genprog.Operations.Registry;
 import com.majesticbyte.genprog.Operations.Stack;
+import com.majesticbyte.genprog.Phenotype;
+import com.majesticbyte.genprog.ProgramResult;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -17,7 +20,7 @@ import java.util.Random;
  *
  * @author mkarjanm
  */
-class BasicLGAPhenotype implements Phenotype {
+public class BasicLGAPhenotype implements Phenotype {
 
     private OpNode[] program;
     private int programSize;
